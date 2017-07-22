@@ -1,0 +1,107 @@
+ 递归__2
+
+ -------------------------------------------------------------------------------------
+
+ 1.统计当前目录以及其子目录和其中文件的大小
+
+ 基本思想:
+        1.从一个给定路径开始
+        2.判断该路径是不是目录,如果是则统计它的大小并返回第一步,如果不是则直接统计文件大小
+
+ 用到的函数:
+ os.listdir(x) #获取x下的文件信息
+ os.path.join(x,s)  #将x,s组合成一个路径
+ os.path.isdir(x)  #判断x是否是目录
+ os.path.getsize(x)  #获取x的大小
+
+ def count_size(path):
+     total = os.path.getsize(path)
+     if os.path.isdir(path):
+         for element in os.listdir(path):
+             disk = os.path.join(path,element)
+             total += count_size(disk)  #递归
+
+     print('{0:<9}'.format(total,path)
+     return total
+
+------------------------------------------------------------------------------------
+
+斐波那契数列:
+
+斐波那契数列就是每一个数都是前两个数的和
+
+     fibnacci(n) = 0 : n = 0
+     fibnacci(n) = 1 : n = 1
+     fibnacci(n) =  fibnacci(n-1) + fibnacci(n-2) : n > 1
+
+def fibnacci(n):
+    if n == 0:
+        return 0
+    elif n == 1:
+        return 1
+    else:
+        return  fibnacci(n-1) + fibnacii(n-2)
+
+(最好不要尝试获取过大的数[40])
+
+--------------------------------------------------------------------------------------
+
+递归计算一个数的任意次方
+
+基本思想:先计算一个数的(n//2)次方,然后再将得到的结果相乘,最后:如果计算的是奇次幂,由于
+        (n//2)会少计算一次幂,所以需要再乘以这个数本身一次,否则,如果是偶次幂则正常返回.
+
+       result = 1 : n = 0
+       result = power(x,n//2)**2*x : n为奇数
+       result = x**(n//2)   : n为偶数
+
+def power(x,n):
+    if n == 0:
+        return 1
+    temp = power(x,n//2)
+    result = temp * temp
+    if n % 2 != 0:
+        result *= x
+    return  result
+
+------------------------------------------------------------------------------------
+
+一个奇怪的递归计算和
+
+目的:通过双递归方法计算一个数组的和
+
+def binary_sum(s,start,stop):
+    if start >= stop: #没有元素
+        return 0
+    elif start == stop - 1: #只有一个元素
+        return s[start]
+    else:
+        mid = (start+stop) // 2
+        return binary_sum(s,start,mid) + binary_sum(s,mid,stop)
+
+他的奇怪之处在于:看着好像计算了两次s[mid],但是仔细观察发现:当只有一个元素时函数会返回s[start]，
+              所以第一个函数调用的s[mid]不会被返回,只有第二个函数调用的s[mid]才会被返回.
+
+------------------------------------------------------------------------------------
+
+利用递归方法生成一个集合中指定元素个数(k)的各种组合.
+
+基本思想:首先在集合中选取第一个元素,并将其拿出放入到指定列表中,在首元素确定的情况下依次在集合中
+        选取剩余的元素,直到选出指定个数的元素.
+
+需要用到一些小技巧:首先，当一个元素被选到后他就不能再出现在候选元素中,所以需要操作集合(集合),其次:
+                由于使用的是递归方法,所以选中的首元素需要保存在一个指针对象中(列表).
+
+def generate_set(k,s,u):
+    for value in u:
+        s.append(value)
+        u.remove(value)
+        if k == 1:
+            print(s)
+        else:
+            generate_set(k-1,s,u)
+        a = s.pop()
+        u.add(a)
+
+
+-------------------------------------------------------------------------------------
