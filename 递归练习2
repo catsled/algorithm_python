@@ -1,0 +1,63 @@
+
+这里是递归函数的练习2
+
+-------------------------------------------------------------------------------------
+
+给定一个路径和一个文件名,查找在此路径下是否有该文件,(可以是该目录的子目录)
+(深度优先)
+
+1.设定函数结束条件:当找到文件,或者该目录已经遍历完了.
+
+2.在当前目录下查找文件,如果文件不存在则去其子目录中查找.
+
+import os
+
+def find_path(path,filename):
+    dest = os.path.join(path,filename)
+    if os.path.exists(dest):
+        print('I have found it')
+        exit()
+    else:
+        ls = os.listdir(path)
+        for di in ls:
+            dest = os.path.join(path,di)
+            if os.path.isdir(dest):
+                find_path(dest,filename)
+            else:
+                continue
+    return False
+
+--------------------------------------------------------------------------------------
+
+查找指定目录并输出其子目录和子文件
+
+1.设定函数结束条件:当找到目录,或者该目录已经遍历完了.
+
+2.在当前目录下查找目录,如果目录不存在则去其子目录中查找.
+
+import os
+
+def yield_whole(path,subdir):
+    subdirs = list()
+    subfiles = list()
+    dest = os.path.join(path,subdir)
+    if os.path.isdir(dest):
+        ls = os.listdir(dest):
+        for sub in ls:
+            di = os.path.join(dest,sub)
+            if os.path.isdir(di):
+                subdirs.append(di)
+            else:
+                subfiles.append(di)
+        print(dest,subdirs,subfiles)
+        exit()
+    else:
+        ls = os.listdir(path)
+        for sub in ls:
+            des = os.path.join(path,sub)
+            if os.isdir(des):
+                yield_whole(des,subdir)
+            else:
+                continue
+
+------------------------------------------------------------------------------------
