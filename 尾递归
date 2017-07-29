@@ -1,0 +1,42 @@
+ 尾递归:
+ 在递归时只操作递归函数本身,没有其他的额外操作
+
+ 例:
+ (非尾递归)
+ def factorial(n):
+     if n == 0:
+         return 1
+     else:
+         return n*factorial(n-1)  #由于有操作n* 所以不是尾递归
+
+ 例:
+ (尾递归)
+ def binary_search(s,target,low,high):
+     if low > high:
+         return False
+     mid = (low+high) // 2
+     if target == s[mid]:
+         return True
+     elif target > s[mid]:
+         binary_search(s,target,mid+1,high)
+     else:
+         binary_search(s,target,low,mid-1)
+
+------------------------------------------------------------------------------------
+   尾递归都可以改写为迭代函数
+
+  例:
+  def binary_search(s,target):
+      low = 0
+      high = len(s) - 1
+      while low <= high:
+          mid = (low + high) // 2
+          if target == s[mid]:
+              return True
+          elif target < s[mid]:
+              high = mid - 1
+          elif target > s[mid]:
+              low = mid + 1
+      return False
+
+-------------------------------------------------------------------------------------
