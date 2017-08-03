@@ -1,0 +1,71 @@
+  多进程实现将一个文件夹中的所有文件复制到一个指定的文件夹中                                                            
+                                                                                           
+ ----------------------------------------------------------------------------------        
+                                                                                           
+ 1.创建多进程                                                                                   
+                                                                                           
+ multiprocessing.Process(target,args)                                                      
+                                                                                           
+ 2.获取文件中的所有文件及目录信息                                                                         
+                                                                                           
+ os.listdir()                                                                              
+                                                                                           
+ 3.复制                                                                                      
+                                                                                           
+ with open('xxx','w') as fin:                                                              
+     fin.write()                                                                           
+                                                                                           
+ -----------------------------------------------------------------------------------       
+                                                                                           
+ 问题:                                                                                       
+                                                                                           
+ 1.多进程之间的通信                                                                                
+                                                                                           
+-----------------------------------------------------------------------                    
+                                                                                           
+ 1.获取文件并整理                                                                                 
+                                                                                           
+ def get_arrange(queue,path):                                                              
+     """获取并重新整理文件"""                                                                       
+     if os.path.isfile(path):                                                              
+         queue.put(path)                                                                   
+     else:                                                                                 
+         for element in os.listdir(path):                                                  
+             dest = os.path.join(path,element)                                             
+             get_arrange(queue,dest)                                                       
+                                                                                           
+  这个函数通过递归方法,path目录下的所有文件以及子目录中的文件都添加到队列中.                                                 
+                                                                                           
+  ---------------------------------------------------------------------------------        
+                                                                                           
+  2.将文件复制到指定文件夹中.                                                                          
+                                                                                           
+  def copy_to_new(queue, dest_dir):                                                        
+      """将文件复制到指定文件夹"""                                                                    
+      while True:                                                                          
+          element = queue.get(timeout=5)                                                   
+          index = element.rfind('/')                                                       
+          new_file = 'new_' + element[index+1:]                                            
+          new_file = os.path.join(dest_dir, new_file)                                      
+          with open(element,'rb') as fout:                                                 
+              with open(new_file, 'wb') as fin:                                            
+                  new_file.write(fout.read())                                              
+   --------------------------------------------------------------------------------        
+                                                                                           
+   3.主函数                                                                                   
+                                                                                           
+   def main():                                                                             
+       queue = multiprocessing.Queue()                                                     
+       path = input('Path:')                                                               
+       new_dir = input('New_dir:')                                                         
+       try:                                                                                
+           os.mkdir(new_dir)                                                               
+       except:                                                                             
+           pass                                                                            
+       path = os.path.abspath(path)                                                        
+       p1 = multiprocessing.Process(target=get_arrange, args=(path, ))                     
+       p2 = multiprocessing.Process(target=copy_to_new, args=(new_dir, ))                  
+       p1.start()                                                                          
+       p2.start()                                                                          
+                                                                                           
+--------------------------------------------------------------------------------------     
