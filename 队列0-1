@@ -1,0 +1,104 @@
+  实现循环队列
+
+ --------------------------------------------------------------------------
+
+  队列的特点:
+  1.先进先出
+
+ --------------------------------------------------------------------------
+
+ 普通队列:
+
+ class Queue(object):
+
+ 	def __init__(self,capacity):
+ 		self._capacity = capacity  # 队列的容量
+ 		self._head = 0  # 指向队列中的第一个元素
+ 		self._n = 0
+ 		self._data = [None]*self._capacity 
+
+ 	def __len__(self):
+ 		return len(self._data)
+
+ 	def is_empty(self):
+ 		return True if self._n == 0 else False
+
+ 	def is_full(self):
+ 		return True if self._n == len(self) else False
+
+ 	def enqueue(self,element):  # 向队列中添加元素
+ 		if is_full:
+ 			raise IndexError('队列已满')
+ 		else:
+ 			avaliable = self._head + self._n  # 获得可以添加元素的位置
+ 			self._data[avaliable] = element
+ 			self._n += 1
+
+ 	def dequeue(self):  #删除并获得队列的第一个值
+ 		if self.is_empty():
+ 			raise IndexError('队列为空')
+ 		else:
+ 			a = self._data[self._head]
+ 			self._data.remove(a)
+ 			self._n -= 1
+ 			self._head += 1
+ 			return a
+
+  这个队列只可以使用一次
+  例:
+  	q = Queue(5)
+  	for i in range(5):
+  		q.enqueue(i)
+
+  	for i in range(5):
+  		q.dequeue()
+
+  	这时由于self._head 在队列的末尾,所以无法再继续向队列中添加元素
+
+ --------------------------------------------------------------------------
+  要解决这个问题,只需要在执行完dequeue后判断self._n的值,如果他的值为零,则意味着,这个队列中已经没有元素了,那么这时将self._head的值返回队列的初始位置即可.
+
+ 	def dequeue(self):  #删除并获得队列的第一个值
+ 		if self.is_empty():
+ 			raise IndexError('队列为空')
+ 		else:
+ 			a = self._data[self._head]
+ 			self._data.remove(a)
+ 			self._n -= 1
+ 			self._head += 1
+ 			if self._n == 0:  # 判断队列中是否还有元素
+ 				self._head = 0
+ 			return a
+
+   但是,这个解决方案有一个问题:队列中的空闲空间如果在self._head的位置之前,那么他就无法被添加值,直到整个队列为空后,这样就会造成空间的浪费.
+ --------------------------------------------------------------------------
+   现在要解决的问题就是:如何让self._head之前位置的空闲空间得到充分的利用.
+
+   现在来做一些数学计算: 1 % 5 = 1 ; 2 % 5 = 2 ; 3 % 5 = 3 ; 4 % 5 =4 ;
+                       5 % 5 = 0 ; 
+
+   可以将 self._head 的值抽象为 1,2,3,4,5 而除数5则作为队列的长度
+
+   由于(3+2) % 5 = 0; (3+4) % 5 = 2;
+   其中3为self._head的位置, 2为当前队列的元素个数,得到的结果0代表下一个可用的位置
+   ,还有一个问题是,当下一个可用的位置变为self._head的位置该怎么办,其实只要进行适当的判断就可以解决这个问题.
+
+   def dequeue(self):
+   		.
+   		.
+   		self._head = (self._head + 1) % len(self)
+   		.
+   		.
+
+   def enqueue(self,element):
+   		.
+   		.
+   		avaliable = (self._head + self._n) % len(self)
+   		self._data[avaliable] = element
+   		.
+   		.
+
+   	至此,一个简单的单向循环队列就实现了.
+
+ -------------------------------------------------------------------------
+
