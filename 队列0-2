@@ -1,0 +1,91 @@
+  双端队列:指的是在普通队列的基础上,可以在队列的头部和尾部添加和删除元素.
+
+  -------------------------------------------------------------------------
+
+    1.首先实现简单的双端队列(可以添加,删除)
+
+    使用变量self._head 指向队列中的第一个元素, 使用self._tail 指向队列中的尾元素
+    ,使用self._n记录当前队列的长度.
+
+    class SimpleDqueue(object):
+    	def __init__(self,capacity):
+    		self._capacity = capacity
+    		self._data = [None] * self._capacity
+    		self._head = 0
+    		self._tail = 0
+    		self._n = 0
+
+    	def __len__(self):
+    		return len(self._data)
+
+    	def is_empty(self):
+    		return True if self._n == 0 else False
+
+    	def is_full(self):
+    		return True if self._n == len(self) else False
+
+    	def enqueue(self,element):
+    		"""正常添加元素"""
+    		if self.is_full():
+    			raise IndexError('队列已满')
+    		else:
+    			avaliable = (self._head + self._n) % len(self)
+    			self._data[avaliable] = element
+    			self._n += 1
+    			self._tail = avaliable
+
+    	def enhead(self,element):
+    		"""向队首添加元素"""
+    		if self.is_full():
+    			raise IndexError('队列已满')
+    		else:
+    			avaliable = (self._head + self._n) % len(self)
+    			self._data[avaliable] = element
+    			self._n += 1
+    			self._head = avaliable
+
+    	def top(self):
+    		"""查看队首元素"""
+    		if self.is_empty():
+    			raise IndexError('队列为空')
+    		else:
+    			print(self._data[self._head])
+
+   现在可以正确的实现队列中元素的插入.
+
+ --------------------------------------------------------------------------
+
+   接下来实现从队列中删除元素
+
+   		def dequeue(self):
+   			"""删除队首的元素"""
+   			if self.is_empty():
+   				raise IndexError('队列为空')
+   			else:
+   				a = self._data[self._head]
+   				self._data[self._head] = None
+   				self._head = (self._head + 1) % len(self)
+   				return a
+
+   		def delast(self):
+   			"""删除队尾元素"""
+   			if self.is_empty():
+   				raise IndexError('队列为空')
+   			else:
+   				a = self._data[self._tail]
+   				self._data[self._tail] = None
+   				self._tail = (self._tail - 1) % len(self)
+   				return a
+
+   		def last(self):
+   			"""查看队尾元素"""
+   			if self.is_empty():
+   				raise IndexError('队列为空')
+   			else:
+   				print(self._data[self._tail])
+
+
+   	现在已经实现了双端可循环队列
+
+ --------------------------------------------------------------------------
+
