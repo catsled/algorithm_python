@@ -1,0 +1,51 @@
+快速排序的分析,实现
+
+---------------------------------------------------------------------------
+分析:
+
+    输入:一组任意顺序的数据
+    输出:一组按照指定方式排列的数据
+    存储方式: 列表
+
+过程:
+	
+	1.初始状态:第一次对该列表进行重排,选定一个元素作为pivot,可以将小于pivot的元素放在pivot的左边,将大于等于pivot的元素放在pivot右边,然后将列表分为两部分.
+	2.假设:第k次对列表进行重排,选定一个新元素作为pivot,同样可以将小于pivot的元素放在pivot的左边,将大于等于pivot的元素放在pivot右边,再次将列表分为两部分.
+	3.推断:第k+1次对列表进行重排,选定一个新元素作为pivot,同样可以将小于pivot的元素放在pivot的左边,将大于等于pivot的元素放在pivot右边,再次将列表分为两部分.
+
+
+---------------------------------------------------------------------------
+实现:
+
+	难点:
+		将合适的元素放在pivot的左边或者右边.
+
+	解决方法: 设置两个游标(head,tail),分别用来指向列表的第一个元素和最后一个元素.
+			 1.先从右向左查找到一个小于pivot的元素,将他放在head所指向的位置.
+			 2.然后从左向右查找到一个大于pivot的元素,将他放在tail所指向的位置.
+			 3.若两个游标重合,则结束,然后将pivot放在游标head所指向的位置.
+
+	def quick_sort(N,start,end):
+		if start >= end
+			return
+		pivot = N[start]
+		head = start
+		tail = end
+		while head < tail:
+			while head < tail and N[tail] > pivot:
+				tail -= 1
+			N[head] = N[tail]
+
+			while head < tail and N[head] <= pivot:
+				head += 1
+			N[tail] = N[head]
+		N[tail] = pivot
+
+		quick_sort(N,start,head-1)
+		quick_sort(N,head+1,end)
+
+---------------------------------------------------------------------------
+时间复杂度:
+			O(nlogn) ~ O(n^2)
+
+
